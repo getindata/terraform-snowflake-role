@@ -1,5 +1,6 @@
 # Snowflake Role Terraform Module
 
+![Snowflake](https://img.shields.io/badge/-SNOWFLAKE-249edc?style=for-the-badge&logo=snowflake&logoColor=white)
 ![Terraform](https://img.shields.io/badge/terraform-%235835CC.svg?style=for-the-badge&logo=terraform&logoColor=white)
 
 ![License](https://badgen.net/github/license/getindata/terraform-snowflake-role/)
