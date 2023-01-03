@@ -1,7 +1,10 @@
 locals {
+  # Get a name from the descriptor. If not available, use default naming convention.
+  # Trim and replace function are used to avoid bare delimiters on both ends of the name and situation of adjacent delimiters.
   name_from_descriptor = trim(replace(
-    lookup(module.role_label.descriptors, "snowflake-role", module.role_label.id), "/__+/", ""
-  ), "_")
+    lookup(module.role_label.descriptors, var.descriptor_name, module.role_label.id), "/${module.role_label.delimiter}${module.role_label.delimiter}+/", module.role_label.delimiter
+  ), module.role_label.delimiter)
+
   granted_roles    = compact(var.granted_roles)
   granted_to_roles = compact(var.granted_to_roles)
   granted_to_users = compact(var.granted_to_users)

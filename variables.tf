@@ -76,3 +76,9 @@ variable "external_table_grants" {
   }))
   default = []
 }
+
+variable "descriptor_name" {
+  description = "Name of the descriptor used to form a resource name"
+  type        = string
+  default     = "snowflake-role"
+}
