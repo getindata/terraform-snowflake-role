@@ -11,7 +11,7 @@ module "role_label" {
 resource "snowflake_role" "this" {
   count = module.this.enabled ? 1 : 0
 
-  name    = upper(local.name_from_descriptor)
+  name    = local.name_from_descriptor
   comment = var.comment
 }
 
