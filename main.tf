@@ -3,8 +3,9 @@ module "role_label" {
   version = "0.25.0"
   context = module.this.context
 
-  delimiter           = "_"
-  regex_replace_chars = "/[^_a-zA-Z0-9]/"
+  delimiter           = coalesce(module.this.context.delimiter, "_")
+  regex_replace_chars = coalesce(module.this.context.regex_replace_chars, "/[^_a-zA-Z0-9]/")
+  label_value_case    = coalesce(module.this.context.label_value_case, "upper")
 }
 
 resource "snowflake_role" "this" {
