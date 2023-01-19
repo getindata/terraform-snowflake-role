@@ -5,9 +5,9 @@ locals {
     lookup(module.role_label.descriptors, var.descriptor_name, module.role_label.id), "/${module.role_label.delimiter}${module.role_label.delimiter}+/", module.role_label.delimiter
   ), module.role_label.delimiter) : null
 
-  granted_roles    = compact(var.granted_roles)
-  granted_to_roles = compact(var.granted_to_roles)
-  granted_to_users = compact(var.granted_to_users)
+  granted_roles    = var.granted_roles
+  granted_to_roles = var.granted_to_roles
+  granted_to_users = var.granted_to_users
 
   database_grants = merge([for database_grant in var.database_grants : {
     for privilege in database_grant.privileges : "${database_grant.database_name}/${privilege}" => {
