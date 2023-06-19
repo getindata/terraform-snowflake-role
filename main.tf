@@ -24,14 +24,14 @@ resource "snowflake_role_ownership_grant" "this" {
 
 resource "snowflake_role_grants" "granted_roles" {
   for_each = toset(module.this.enabled ? local.granted_roles : [])
-
+  enable_multiple_grants = false
   role_name = each.value
   roles     = [one(snowflake_role.this[*].name)]
 }
 
 resource "snowflake_role_grants" "granted_to" {
   count = module.this.enabled && (length(local.granted_to_roles) > 0 || length(local.granted_to_users) > 0) ? 1 : 0
-
+  enable_multiple_grants = false
   role_name = one(snowflake_role.this[*].name)
   roles     = local.granted_to_roles
   users     = local.granted_to_users
@@ -81,6 +81,5 @@ resource "snowflake_account_grant" "this" {
 
   privilege = each.value
   roles     = [one(snowflake_role.this[*].name)]
-  enable_multiple_grants = false
   with_grant_option = false
 }
