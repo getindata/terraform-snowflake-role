@@ -81,6 +81,6 @@ resource "snowflake_account_grant" "this" {
 
   privilege = each.value
   roles     = [one(snowflake_role.this[*].name)]
-
+  enable_multiple_grants = false
   with_grant_option = false
 }
