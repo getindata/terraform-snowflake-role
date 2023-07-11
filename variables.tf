@@ -83,7 +83,7 @@ variable "view_grants" {
     database_name = string
     schema_name   = string
     view_name     = optional(string)
-    on_future     = optional(bool, false)
+    on_future     = false
     privileges    = list(string)
   }))
   default = []
