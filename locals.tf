@@ -49,7 +49,6 @@ locals {
       database_name       = view_grant.database_name
       schema_name         = view_grant.schema_name
       view_name           = view_grant.view_name
-      on_future           = view_grant.on_future
       privilege           = privilege
     }
   }]...)
