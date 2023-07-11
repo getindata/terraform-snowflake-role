@@ -95,6 +95,7 @@ module "snowflake_role" {
 | <a name="input_table_grants"></a> [table\_grants](#input\_table\_grants) | Grants on a table level | <pre>list(object({<br>    database_name = string<br>    schema_name   = string<br>    table_name    = optional(string)<br>    on_future     = optional(bool, false)<br>    privileges    = list(string)<br>  }))</pre> | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (e.g. `{'BusinessUnit': 'XYZ'}`).<br>Neither the tag keys nor the tag values will be modified by this module. | `map(string)` | `{}` | no |
 | <a name="input_tenant"></a> [tenant](#input\_tenant) | ID element \_(Rarely used, not included by default)\_. A customer identifier, indicating who this instance of a resource is for | `string` | `null` | no |
+| <a name="input_view_grants"></a> [view\_grants](#input\_view\_grants) | Grants on a view level | <pre>list(object({<br>    database_name = string<br>    schema_name   = string<br>    view_name     = optional(string)<br>    on_future     = optional(bool, false)<br>    privileges    = list(string)<br>  }))</pre> | `[]` | no |
 
 ## Modules
 
@@ -135,6 +136,7 @@ module "snowflake_role" {
 | [snowflake_role_ownership_grant.this](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_ownership_grant) | resource |
 | [snowflake_schema_grant.this](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/schema_grant) | resource |
 | [snowflake_table_grant.this](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/table_grant) | resource |
+| [snowflake_view_grant.this](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/view_grant) | resource |
 <!-- END_TF_DOCS -->
 
 ## CONTRIBUTING
