@@ -6,6 +6,7 @@ repos:
         args:
           - --module
           - --config=.tflint.hcl
+          - --chdir=.
       - id: terraform-validate
       - id: terraform-fmt
 
