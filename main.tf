@@ -83,7 +83,6 @@ resource "snowflake_view_grant" "this" {
   schema_name         = each.value.schema_name
   view_name           = each.value.view_name
   privilege           = each.value.privilege
-  on_future           = each.value.on_future
   roles               = [one(snowflake_role.this[*].name)]
 }
 
