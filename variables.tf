@@ -77,6 +77,18 @@ variable "external_table_grants" {
   default = []
 }
 
+variable "view_grants" {
+  description = "Grants on a view level"
+  type = list(object({
+    database_name = string
+    schema_name   = string
+    view_name     = optional(string)
+    on_future     = optional(bool, false)
+    privileges    = list(string)
+  }))
+  default = []
+}
+
 variable "descriptor_name" {
   description = "Name of the descriptor used to form a resource name"
   type        = string

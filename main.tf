@@ -76,6 +76,17 @@ resource "snowflake_external_table_grant" "this" {
   roles               = [one(snowflake_role.this[*].name)]
 }
 
+resource "snowflake_view_grant" "this" {
+  for_each = module.this.enabled ? local.view_grants : {}
+
+  database_name       = each.value.database_name
+  schema_name         = each.value.schema_name
+  view_name           = each.value.view_name
+  privilege           = each.value.privilege
+  on_future           = each.value.on_future
+  roles               = [one(snowflake_role.this[*].name)]
+}
+
 resource "snowflake_account_grant" "this" {
   for_each = toset(module.this.enabled ? var.account_grants : [])
 
