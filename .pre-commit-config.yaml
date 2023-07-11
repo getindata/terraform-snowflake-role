@@ -3,6 +3,9 @@ repos:
     rev: "v0.1.17" # Get the latest from: https://github.com/gruntwork-io/pre-commit/releases
     hooks:
       - id: tflint
+        args:
+          - --module
+          - --config=.tflint.hcl
       - id: terraform-validate
       - id: terraform-fmt
 
