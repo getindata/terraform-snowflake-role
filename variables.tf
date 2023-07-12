@@ -59,7 +59,7 @@ variable "table_grants" {
     database_name = string
     schema_name   = string
     table_name    = optional(string)
-    on_future     = optional(bool, false)
+    on_future     = optional(bool)
     privileges    = list(string)
   }))
   default = []
@@ -71,7 +71,7 @@ variable "external_table_grants" {
     database_name       = string
     schema_name         = string
     external_table_name = optional(string)
-    on_future           = optional(bool, false)
+    on_future           = optional(bool)
     privileges          = list(string)
   }))
   default = []
