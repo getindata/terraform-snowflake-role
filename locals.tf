@@ -46,11 +46,11 @@ locals {
 
   view_grants = merge([for view_grant in var.view_grants : {
     for privilege in view_grant.privileges : "${view_grant.database_name}/${view_grant.schema_name}/${coalesce(view_grant.view_name, "on_future")}/${privilege}" => {
-      database_name       = view_grant.database_name
-      schema_name         = view_grant.schema_name
-      view_name           = view_grant.view_name
-      on_future           = view_grant.on_future
-      privilege           = privilege
+      database_name = view_grant.database_name
+      schema_name   = view_grant.schema_name
+      view_name     = view_grant.view_name
+      on_future     = view_grant.on_future
+      privilege     = privilege
     }
   }]...)
 }
