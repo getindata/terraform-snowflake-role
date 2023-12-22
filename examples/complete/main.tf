@@ -29,4 +29,13 @@ module "snowflake_role" {
       privileges    = ["SELECT"]
     }
   ]
+
+  view_grants = [
+    {
+      database_name = "LOGS_DB"
+      schema_name   = "BRONZE"
+      on_all        = true
+      privileges    = ["SELECT"]
+    }
+  ]
 }

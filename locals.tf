@@ -17,39 +17,44 @@ locals {
   }]...)
 
   schema_grants = merge([for schema_grant in var.schema_grants : {
-    for privilege in schema_grant.privileges : "${schema_grant.database_name}/${schema_grant.schema_name}/${privilege}" => {
+    for privilege in schema_grant.privileges : "${schema_grant.database_name}/${coalesce(schema_grant.schema_name, schema_grant.on_future != null ? "on_future" : "on_all")}/${privilege}" => {
       database_name = schema_grant.database_name
       schema_name   = schema_grant.schema_name
+      on_future     = schema_grant.on_future
+      on_all        = schema_grant.on_all
       privilege     = privilege
     }
   }]...)
 
   table_grants = merge([for table_grant in var.table_grants : {
-    for privilege in table_grant.privileges : "${table_grant.database_name}/${table_grant.schema_name}/${coalesce(table_grant.table_name, "on_future")}/${privilege}" => {
+    for privilege in table_grant.privileges : "${table_grant.database_name}/${table_grant.schema_name}/${coalesce(table_grant.table_name, table_grant.on_future != null ? "on_future" : "on_all")}/${privilege}" => {
       database_name = table_grant.database_name
       schema_name   = table_grant.schema_name
       table_name    = table_grant.table_name
       on_future     = table_grant.on_future
+      on_all        = table_grant.on_all
       privilege     = privilege
     }
   }]...)
 
   external_table_grants = merge([for table_grant in var.external_table_grants : {
-    for privilege in table_grant.privileges : "${table_grant.database_name}/${table_grant.schema_name}/${coalesce(table_grant.external_table_name, "on_future")}/${privilege}" => {
+    for privilege in table_grant.privileges : "${table_grant.database_name}/${table_grant.schema_name}/${coalesce(table_grant.external_table_name, table_grant.on_future != null ? "on_future" : "on_all")}/${privilege}" => {
       database_name       = table_grant.database_name
       schema_name         = table_grant.schema_name
       external_table_name = table_grant.external_table_name
       on_future           = table_grant.on_future
+      on_all              = table_grant.on_all
       privilege           = privilege
     }
   }]...)
 
   view_grants = merge([for view_grant in var.view_grants : {
-    for privilege in view_grant.privileges : "${view_grant.database_name}/${view_grant.schema_name}/${coalesce(view_grant.view_name, "on_future")}/${privilege}" => {
+    for privilege in view_grant.privileges : "${view_grant.database_name}/${view_grant.schema_name}/${coalesce(view_grant.view_name, view_grant.on_future != null ? "on_future" : "on_all")}/${privilege}" => {
       database_name = view_grant.database_name
       schema_name   = view_grant.schema_name
       view_name     = view_grant.view_name
       on_future     = view_grant.on_future
+      on_all        = view_grant.on_all
       privilege     = privilege
     }
   }]...)
