@@ -77,7 +77,7 @@ module "snowflake_role" {
 | <a name="input_descriptor_name"></a> [descriptor\_name](#input\_descriptor\_name) | Name of the descriptor used to form a resource name | `string` | `"snowflake-role"` | no |
 | <a name="input_enabled"></a> [enabled](#input\_enabled) | Set to false to prevent the module from creating any resources | `bool` | `null` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | ID element. Usually used for region e.g. 'uw2', 'us-west-2', OR role 'prod', 'staging', 'dev', 'UAT' | `string` | `null` | no |
-| <a name="input_external_table_grants"></a> [external\_table\_grants](#input\_external\_table\_grants) | Grants on a external table level | <pre>list(object({<br>    database_name       = string<br>    schema_name         = string<br>    external_table_name = optional(string)<br>    on_future           = optional(bool)<br>    privileges          = list(string)<br>  }))</pre> | `[]` | no |
+| <a name="input_external_table_grants"></a> [external\_table\_grants](#input\_external\_table\_grants) | Grants on a external table level | <pre>list(object({<br>    database_name       = string<br>    schema_name         = string<br>    external_table_name = optional(string)<br>    on_future           = optional(bool)<br>    on_all              = optional(bool)<br>    privileges          = list(string)<br>  }))</pre> | `[]` | no |
 | <a name="input_granted_roles"></a> [granted\_roles](#input\_granted\_roles) | Roles granted to this role | `list(string)` | `[]` | no |
 | <a name="input_granted_to_roles"></a> [granted\_to\_roles](#input\_granted\_to\_roles) | Roles which this role is granted to | `list(string)` | `[]` | no |
 | <a name="input_granted_to_users"></a> [granted\_to\_users](#input\_granted\_to\_users) | Users which this role is granted to | `list(string)` | `[]` | no |
@@ -90,12 +90,12 @@ module "snowflake_role" {
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | ID element. Usually an abbreviation of your organization name, e.g. 'eg' or 'cp', to help ensure generated IDs are globally unique | `string` | `null` | no |
 | <a name="input_regex_replace_chars"></a> [regex\_replace\_chars](#input\_regex\_replace\_chars) | Terraform regular expression (regex) string.<br>Characters matching the regex will be removed from the ID elements.<br>If not set, `"/[^a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits. | `string` | `null` | no |
 | <a name="input_role_ownership_grant"></a> [role\_ownership\_grant](#input\_role\_ownership\_grant) | The name of the role to grant ownership | `string` | `null` | no |
-| <a name="input_schema_grants"></a> [schema\_grants](#input\_schema\_grants) | Grants on a schema level | <pre>list(object({<br>    database_name = string<br>    schema_name   = string<br>    privileges    = list(string)<br>  }))</pre> | `[]` | no |
+| <a name="input_schema_grants"></a> [schema\_grants](#input\_schema\_grants) | Grants on a schema level | <pre>list(object({<br>    database_name = string<br>    schema_name   = optional(string)<br>    privileges    = list(string)<br>    on_all        = optional(bool)<br>    on_future     = optional(bool)<br>  }))</pre> | `[]` | no |
 | <a name="input_stage"></a> [stage](#input\_stage) | ID element. Usually used to indicate role, e.g. 'prod', 'staging', 'source', 'build', 'test', 'deploy', 'release' | `string` | `null` | no |
-| <a name="input_table_grants"></a> [table\_grants](#input\_table\_grants) | Grants on a table level | <pre>list(object({<br>    database_name = string<br>    schema_name   = string<br>    table_name    = optional(string)<br>    on_future     = optional(bool)<br>    privileges    = list(string)<br>  }))</pre> | `[]` | no |
+| <a name="input_table_grants"></a> [table\_grants](#input\_table\_grants) | Grants on a table level | <pre>list(object({<br>    database_name = string<br>    schema_name   = string<br>    table_name    = optional(string)<br>    on_future     = optional(bool)<br>    on_all        = optional(bool)<br>    privileges    = list(string)<br>  }))</pre> | `[]` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (e.g. `{'BusinessUnit': 'XYZ'}`).<br>Neither the tag keys nor the tag values will be modified by this module. | `map(string)` | `{}` | no |
 | <a name="input_tenant"></a> [tenant](#input\_tenant) | ID element \_(Rarely used, not included by default)\_. A customer identifier, indicating who this instance of a resource is for | `string` | `null` | no |
-| <a name="input_view_grants"></a> [view\_grants](#input\_view\_grants) | Grants on a view level | <pre>list(object({<br>    database_name = string<br>    schema_name   = string<br>    view_name     = optional(string)<br>    on_future     = optional(bool)<br>    privileges    = list(string)<br>  }))</pre> | `[]` | no |
+| <a name="input_view_grants"></a> [view\_grants](#input\_view\_grants) | Grants on a view level | <pre>list(object({<br>    database_name = string<br>    schema_name   = string<br>    view_name     = optional(string)<br>    on_future     = optional(bool)<br>    on_all        = optional(bool)<br>    privileges    = list(string)<br>  }))</pre> | `[]` | no |
 
 ## Modules
 
@@ -114,14 +114,14 @@ module "snowflake_role" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_snowflake"></a> [snowflake](#provider\_snowflake) | ~> 0.54 |
+| <a name="provider_snowflake"></a> [snowflake](#provider\_snowflake) | ~> 0.69 |
 
 ## Requirements
 
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3 |
-| <a name="requirement_snowflake"></a> [snowflake](#requirement\_snowflake) | ~> 0.54 |
+| <a name="requirement_snowflake"></a> [snowflake](#requirement\_snowflake) | ~> 0.69 |
 
 ## Resources
 

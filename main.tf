@@ -51,6 +51,8 @@ resource "snowflake_schema_grant" "this" {
   database_name = each.value.database_name
   schema_name   = each.value.schema_name
   privilege     = each.value.privilege
+  on_future     = each.value.on_future
+  on_all        = each.value.on_all
   roles         = [one(snowflake_role.this[*].name)]
 }
 
@@ -62,6 +64,7 @@ resource "snowflake_table_grant" "this" {
   table_name    = each.value.table_name
   privilege     = each.value.privilege
   on_future     = each.value.on_future
+  on_all        = each.value.on_all
   roles         = [one(snowflake_role.this[*].name)]
 }
 
@@ -73,6 +76,7 @@ resource "snowflake_external_table_grant" "this" {
   external_table_name = each.value.external_table_name
   privilege           = each.value.privilege
   on_future           = each.value.on_future
+  on_all              = each.value.on_all
   roles               = [one(snowflake_role.this[*].name)]
 }
 
@@ -84,6 +88,7 @@ resource "snowflake_view_grant" "this" {
   view_name     = each.value.view_name
   privilege     = each.value.privilege
   on_future     = each.value.on_future
+  on_all        = each.value.on_all
   roles         = [one(snowflake_role.this[*].name)]
 }
 
