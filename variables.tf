@@ -55,7 +55,7 @@ variable "schema_grants" {
   default = []
   validation {
     condition     = alltrue([for schema_grant in var.schema_grants : anytrue([schema_grant.schema_name != null, schema_grant.on_future, schema_grant.on_all])])
-    error_message = "Variable `schema_grants` fails validation - ne of `schema_name`, `on_future` or `on_all` has to be set (not null / true)."
+    error_message = "Variable `schema_grants` fails validation - one of `schema_name`, `on_future` or `on_all` has to be set (not null / true)."
   }
 }
 
