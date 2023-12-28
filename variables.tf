@@ -53,6 +53,10 @@ variable "schema_grants" {
     on_future     = optional(bool)
   }))
   default = []
+  validation {
+    condition     = alltrue([for schema_grant in var.schema_grants : anytrue([schema_grant.schema_name != null, schema_grant.on_future, schema_grant.on_all])])
+    error_message = "Variable `schema_grants` fails validation - one of `schema_name`, `on_future` or `on_all` has to be set (not null / true)."
+  }
 }
 
 variable "table_grants" {
@@ -66,6 +70,10 @@ variable "table_grants" {
     privileges    = list(string)
   }))
   default = []
+  validation {
+    condition     = alltrue([for table_grant in var.table_grants : anytrue([table_grant.table_name != null, table_grant.on_future, table_grant.on_all])])
+    error_message = "Variable `table_grants` fails validation - one of `table_name`, `on_future` or `on_all` has to be set (not null / true)."
+  }
 }
 
 variable "external_table_grants" {
@@ -79,6 +87,10 @@ variable "external_table_grants" {
     privileges          = list(string)
   }))
   default = []
+  validation {
+    condition     = alltrue([for external_table_grant in var.external_table_grants : anytrue([external_table_grant.external_table_name != null, external_table_grant.on_future, external_table_grant.on_all])])
+    error_message = "Variable `external_table_grants` fails validation - one of `external_table_name`, `on_future` or `on_all` has to be set (not null / true)."
+  }
 }
 
 variable "view_grants" {
@@ -92,6 +104,10 @@ variable "view_grants" {
     privileges    = list(string)
   }))
   default = []
+  validation {
+    condition     = alltrue([for view_grant in var.view_grants : anytrue([view_grant.view_name != null, view_grant.on_future, view_grant.on_all])])
+    error_message = "Variable `view_grants` fails validation - one of `view_name`, `on_future` or `on_all` has to be set (not null / true)."
+  }
 }
 
 variable "descriptor_name" {
