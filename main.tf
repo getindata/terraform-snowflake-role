@@ -100,3 +100,35 @@ resource "snowflake_account_grant" "this" {
 
   with_grant_option = false
 }
+
+resource "snowflake_grant_privileges_to_role" "this" {
+  for_each = module.this.enabled ? local.dynamic_table_grants : {}
+
+  privileges     = each.value.privileges
+  all_privileges = each.value.all_privileges
+  role_name      = one(snowflake_role.this[*].name)
+
+  on_schema_object {
+
+    object_type = each.value.dynamic_table_name != null ? "DYNAMIC TABLE" : null
+    object_name = each.value.dynamic_table_name != null ? join(".", [each.value.database_name, each.value.schema_name, each.value.dynamic_table_name]) : null
+
+    dynamic "future" {
+      for_each = each.value.on_future ? [1] : []
+      content {
+        object_type_plural = "DYNAMIC TABLES"
+        in_database        = each.value.schema_name != null ? null : each.value.database_name
+        in_schema          = each.value.schema_name != null ? join(".", [each.value.database_name, each.value.schema_name]) : null
+      }
+    }
+
+    dynamic "all" {
+      for_each = each.value.on_all ? [1] : []
+      content {
+        object_type_plural = "DYNAMIC TABLES"
+        in_database        = each.value.schema_name != null ? null : each.value.database_name
+        in_schema          = each.value.schema_name != null ? join(".", [each.value.database_name, each.value.schema_name]) : null
+      }
+    }
+  }
+}

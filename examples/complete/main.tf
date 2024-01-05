@@ -38,4 +38,25 @@ module "snowflake_role" {
       privileges    = ["SELECT"]
     }
   ]
+
+  dynamic_table_grants = [
+    {
+      database_name  = "LOGS_DB"
+      on_all         = true
+      on_future      = true
+      all_privileges = true
+    },
+    {
+      database_name  = "TEST_DB"
+      schema_name    = "BRONZE"
+      on_all         = true
+      all_privileges = true
+    },
+    {
+      database_name      = "TEST_DB"
+      schema_name        = "SILVER"
+      dynamic_table_name = "EXAMPLE"
+      privileges         = ["SELECT"]
+    },
+  ]
 }
