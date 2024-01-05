@@ -124,7 +124,7 @@ variable "dynamic_table_grants" {
   default = []
   validation {
     condition     = alltrue([for grant in var.dynamic_table_grants : !anytrue([grant.privileges == null && grant.all_privileges == null, grant.privileges != null && grant.all_privileges != null])])
-    error_message = "Variable `dynamic_table_grants` fails validation - only one of `privilages` or `all_privilages` can be not null."
+    error_message = "Variable `dynamic_table_grants` fails validation - only one of `privileges` or `all_privileges` can be set."
   }
   validation {
     condition     = alltrue([for grant in var.dynamic_table_grants : !alltrue([grant.dynamic_table_name != null, grant.on_future || grant.on_all])])
