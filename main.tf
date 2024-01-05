@@ -101,7 +101,7 @@ resource "snowflake_account_grant" "this" {
   with_grant_option = false
 }
 
-resource "snowflake_grant_privileges_to_role" "this" {
+resource "snowflake_grant_privileges_to_role" "dynamic_table" {
   for_each = module.this.enabled ? local.dynamic_table_grants : {}
 
   privileges     = each.value.privileges
