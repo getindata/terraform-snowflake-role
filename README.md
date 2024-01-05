@@ -131,7 +131,7 @@ module "snowflake_role" {
 | [snowflake_account_grant.this](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/account_grant) | resource |
 | [snowflake_database_grant.this](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/database_grant) | resource |
 | [snowflake_external_table_grant.this](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/external_table_grant) | resource |
-| [snowflake_grant_privileges_to_role.this](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_privileges_to_role) | resource |
+| [snowflake_grant_privileges_to_role.dynamic_table](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_privileges_to_role) | resource |
 | [snowflake_role.this](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role) | resource |
 | [snowflake_role_grants.granted_roles](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants) | resource |
 | [snowflake_role_grants.granted_to](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants) | resource |
