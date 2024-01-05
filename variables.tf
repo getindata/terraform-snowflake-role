@@ -110,6 +110,28 @@ variable "view_grants" {
   }
 }
 
+variable "dynamic_table_grants" {
+  description = "Grants on a dynamic_table level"
+  type = list(object({
+    database_name      = string
+    schema_name        = optional(string)
+    dynamic_table_name = optional(string)
+    on_future          = optional(bool, false)
+    on_all             = optional(bool, false)
+    all_privileges     = optional(bool)
+    privileges         = optional(list(string), null)
+  }))
+  default = []
+  validation {
+    condition     = alltrue([for grant in var.dynamic_table_grants : !anytrue([grant.privileges == null && grant.all_privileges == null, grant.privileges != null && grant.all_privileges != null])])
+    error_message = "Variable `dynamic_table_grants` fails validation - only one of `privileges` or `all_privileges` can be set."
+  }
+  validation {
+    condition     = alltrue([for grant in var.dynamic_table_grants : !alltrue([grant.dynamic_table_name != null, grant.on_future || grant.on_all])])
+    error_message = "Variable `dynamic_table_grants` fails validation - when `dynamic_table_name` is set, `on_future` and `on_all` have to be false / not set."
+  }
+}
+
 variable "descriptor_name" {
   description = "Name of the descriptor used to form a resource name"
   type        = string

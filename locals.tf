@@ -58,4 +58,17 @@ locals {
       privilege     = privilege
     }
   }]...)
+
+  dynamic_table_grants = merge([for grant in var.dynamic_table_grants : {
+    for key, value in { "dynamic_table_name" = grant.dynamic_table_name, "on_all" = grant.on_all, "on_future" = grant.on_future } :
+    "${grant.database_name}/${coalesce(grant.schema_name, "all")}/${key == "dynamic_table_name" ? value : key}" => {
+      database_name      = grant.database_name
+      schema_name        = grant.schema_name
+      dynamic_table_name = key == "dynamic_table_name" ? value : null
+      on_future          = key == "on_future" ? value : false
+      on_all             = key == "on_all" ? value : false
+      privileges         = grant.privileges
+      all_privileges     = grant.all_privileges
+    } if(key == "dynamic_table_name" && value != null) || value == true
+  }]...)
 }
