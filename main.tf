@@ -25,78 +25,86 @@ resource "snowflake_role_ownership_grant" "this" {
 resource "snowflake_role_grants" "granted_roles" {
   for_each = toset(module.this.enabled ? local.granted_roles : [])
 
-  role_name = each.value
-  roles     = [one(snowflake_role.this[*].name)]
+  enable_multiple_grants = var.enable_multiple_grants
+  role_name              = each.value
+  roles                  = [one(snowflake_role.this[*].name)]
 }
 
 resource "snowflake_role_grants" "granted_to" {
   count = module.this.enabled && (length(local.granted_to_roles) > 0 || length(local.granted_to_users) > 0) ? 1 : 0
 
-  role_name = one(snowflake_role.this[*].name)
-  roles     = local.granted_to_roles
-  users     = local.granted_to_users
+  enable_multiple_grants = var.enable_multiple_grants
+  role_name              = one(snowflake_role.this[*].name)
+  roles                  = local.granted_to_roles
+  users                  = local.granted_to_users
 }
 
 resource "snowflake_database_grant" "this" {
   for_each = module.this.enabled ? local.database_grants : {}
 
-  database_name = each.value.database_name
-  privilege     = each.value.privilege
-  roles         = [one(snowflake_role.this[*].name)]
+  enable_multiple_grants = each.value.enable_multiple_grants
+  database_name          = each.value.database_name
+  privilege              = each.value.privilege
+  roles                  = [one(snowflake_role.this[*].name)]
 }
 
 resource "snowflake_schema_grant" "this" {
   for_each = module.this.enabled ? local.schema_grants : {}
 
-  database_name = each.value.database_name
-  schema_name   = each.value.schema_name
-  privilege     = each.value.privilege
-  on_future     = each.value.on_future
-  on_all        = each.value.on_all
-  roles         = [one(snowflake_role.this[*].name)]
+  enable_multiple_grants = each.value.enable_multiple_grants
+  database_name          = each.value.database_name
+  schema_name            = each.value.schema_name
+  privilege              = each.value.privilege
+  on_future              = each.value.on_future
+  on_all                 = each.value.on_all
+  roles                  = [one(snowflake_role.this[*].name)]
 }
 
 resource "snowflake_table_grant" "this" {
   for_each = module.this.enabled ? local.table_grants : {}
 
-  database_name = each.value.database_name
-  schema_name   = each.value.schema_name
-  table_name    = each.value.table_name
-  privilege     = each.value.privilege
-  on_future     = each.value.on_future
-  on_all        = each.value.on_all
-  roles         = [one(snowflake_role.this[*].name)]
+  enable_multiple_grants = each.value.enable_multiple_grants
+  database_name          = each.value.database_name
+  schema_name            = each.value.schema_name
+  table_name             = each.value.table_name
+  privilege              = each.value.privilege
+  on_future              = each.value.on_future
+  on_all                 = each.value.on_all
+  roles                  = [one(snowflake_role.this[*].name)]
 }
 
 resource "snowflake_external_table_grant" "this" {
   for_each = module.this.enabled ? local.external_table_grants : {}
 
-  database_name       = each.value.database_name
-  schema_name         = each.value.schema_name
-  external_table_name = each.value.external_table_name
-  privilege           = each.value.privilege
-  on_future           = each.value.on_future
-  on_all              = each.value.on_all
-  roles               = [one(snowflake_role.this[*].name)]
+  enable_multiple_grants = each.value.enable_multiple_grants
+  database_name          = each.value.database_name
+  schema_name            = each.value.schema_name
+  external_table_name    = each.value.external_table_name
+  privilege              = each.value.privilege
+  on_future              = each.value.on_future
+  on_all                 = each.value.on_all
+  roles                  = [one(snowflake_role.this[*].name)]
 }
 
 resource "snowflake_view_grant" "this" {
   for_each = module.this.enabled ? local.view_grants : {}
 
-  database_name = each.value.database_name
-  schema_name   = each.value.schema_name
-  view_name     = each.value.view_name
-  privilege     = each.value.privilege
-  on_future     = each.value.on_future
-  on_all        = each.value.on_all
-  roles         = [one(snowflake_role.this[*].name)]
+  enable_multiple_grants = each.value.enable_multiple_grants
+  database_name          = each.value.database_name
+  schema_name            = each.value.schema_name
+  view_name              = each.value.view_name
+  privilege              = each.value.privilege
+  on_future              = each.value.on_future
+  on_all                 = each.value.on_all
+  roles                  = [one(snowflake_role.this[*].name)]
 }
 
 resource "snowflake_account_grant" "this" {
   for_each = toset(module.this.enabled ? var.account_grants : [])
 
-  privilege = each.value
-  roles     = [one(snowflake_role.this[*].name)]
+  enable_multiple_grants = var.enable_multiple_grants
+  privilege              = each.value
+  roles                  = [one(snowflake_role.this[*].name)]
 
   with_grant_option = false
 }

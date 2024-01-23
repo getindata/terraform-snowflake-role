@@ -8,8 +8,9 @@ module "snowflake_role" {
 
   database_grants = [
     {
-      database_name = "LOGS_DB"
-      privileges    = ["USAGE"]
+      database_name          = "LOGS_DB"
+      privileges             = ["USAGE"]
+      enable_multiple_grants = true
     }
   ]
 
