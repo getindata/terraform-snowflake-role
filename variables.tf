@@ -4,6 +4,12 @@ variable "comment" {
   default     = null
 }
 
+variable "enable_multiple_grants" {
+  description = "When this is set to true, multiple grants of the same type can be created for all grants in the role. This will cause Terraform to not revoke grants applied to roles and objects outside Terraform"
+  type        = bool
+  default     = null
+}
+
 variable "role_ownership_grant" {
   description = "The name of the role to grant ownership"
   type        = string
@@ -37,8 +43,9 @@ variable "account_grants" {
 variable "database_grants" {
   description = "Grants on a database level"
   type = list(object({
-    database_name = string
-    privileges    = list(string)
+    database_name          = string
+    privileges             = list(string)
+    enable_multiple_grants = optional(bool)
   }))
   default = []
 }
@@ -46,11 +53,12 @@ variable "database_grants" {
 variable "schema_grants" {
   description = "Grants on a schema level"
   type = list(object({
-    database_name = string
-    schema_name   = optional(string)
-    privileges    = list(string)
-    on_all        = optional(bool)
-    on_future     = optional(bool)
+    database_name          = string
+    schema_name            = optional(string)
+    privileges             = list(string)
+    on_all                 = optional(bool)
+    on_future              = optional(bool)
+    enable_multiple_grants = optional(bool)
   }))
   default = []
   validation {
@@ -62,12 +70,13 @@ variable "schema_grants" {
 variable "table_grants" {
   description = "Grants on a table level"
   type = list(object({
-    database_name = string
-    schema_name   = string
-    table_name    = optional(string)
-    on_future     = optional(bool)
-    on_all        = optional(bool)
-    privileges    = list(string)
+    database_name          = string
+    schema_name            = string
+    table_name             = optional(string)
+    on_future              = optional(bool)
+    on_all                 = optional(bool)
+    privileges             = list(string)
+    enable_multiple_grants = optional(bool)
   }))
   default = []
   validation {
@@ -79,12 +88,13 @@ variable "table_grants" {
 variable "external_table_grants" {
   description = "Grants on a external table level"
   type = list(object({
-    database_name       = string
-    schema_name         = string
-    external_table_name = optional(string)
-    on_future           = optional(bool)
-    on_all              = optional(bool)
-    privileges          = list(string)
+    database_name          = string
+    schema_name            = string
+    external_table_name    = optional(string)
+    on_future              = optional(bool)
+    on_all                 = optional(bool)
+    privileges             = list(string)
+    enable_multiple_grants = optional(bool)
   }))
   default = []
   validation {
@@ -96,12 +106,13 @@ variable "external_table_grants" {
 variable "view_grants" {
   description = "Grants on a view level"
   type = list(object({
-    database_name = string
-    schema_name   = string
-    view_name     = optional(string)
-    on_future     = optional(bool)
-    on_all        = optional(bool)
-    privileges    = list(string)
+    database_name          = string
+    schema_name            = string
+    view_name              = optional(string)
+    on_future              = optional(bool)
+    on_all                 = optional(bool)
+    privileges             = list(string)
+    enable_multiple_grants = optional(bool)
   }))
   default = []
   validation {
