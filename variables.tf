@@ -71,7 +71,7 @@ variable "table_grants" {
   description = "Grants on a table level"
   type = list(object({
     database_name          = string
-    schema_name            = string
+    schema_name            = optional(string)
     table_name             = optional(string)
     on_future              = optional(bool)
     on_all                 = optional(bool)
@@ -89,7 +89,7 @@ variable "external_table_grants" {
   description = "Grants on a external table level"
   type = list(object({
     database_name          = string
-    schema_name            = string
+    schema_name            = optional(string)
     external_table_name    = optional(string)
     on_future              = optional(bool)
     on_all                 = optional(bool)
@@ -107,7 +107,7 @@ variable "view_grants" {
   description = "Grants on a view level"
   type = list(object({
     database_name          = string
-    schema_name            = string
+    schema_name            = optional(string)
     view_name              = optional(string)
     on_future              = optional(bool)
     on_all                 = optional(bool)
