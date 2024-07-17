@@ -1,63 +1,156 @@
+resource "snowflake_database" "this" {
+  name = "SAMPLE_DB"
+}
+
+resource "snowflake_warehouse" "this" {
+  name = "SAMPLE_WAREHOUSE"
+}
+
+resource "snowflake_schema" "schema_1" {
+  name     = "BRONZE"
+  database = snowflake_database.this.name
+}
+
+resource "snowflake_schema" "schema_2" {
+  name     = "SILVER"
+  database = snowflake_database.this.name
+}
+
+resource "snowflake_role" "role_1" {
+  name = "SAMPLE_ROLE_1"
+}
+
+resource "snowflake_role" "role_2" {
+  name = "SAMPLE_ROLE_2"
+}
+
+resource "snowflake_database_role" "this" {
+  name     = "SAMPLE_DB_ROLE"
+  database = snowflake_database.this.name
+}
+
+resource "snowflake_user" "this" {
+  name = "SAMPLE_USER"
+}
+
+resource "snowflake_table" "this" {
+  name     = "EXAMPLE"
+  schema   = snowflake_schema.schema_1.name
+  database = snowflake_database.this.name
+
+  column {
+    name = "ID"
+    type = "NUMBER"
+  }
+}
+
+resource "snowflake_dynamic_table" "this" {
+  name = "EXAMPLE"
+
+  database  = snowflake_database.this.name
+  warehouse = snowflake_warehouse.this.name
+  schema    = snowflake_schema.schema_2.name
+  query     = "SELECT * from ${snowflake_table.this.database}.${snowflake_table.this.schema}.${snowflake_table.this.name}"
+  target_lag {
+    maximum_duration = 3600
+  }
+}
+
 module "snowflake_role" {
   source  = "../../"
   context = module.this.context
 
-  name = "LOGS_DATABASE_READER"
+  name = "SAMPLE_TEST"
 
-  granted_to_users = ["JANE_SMITH", "JOHN_DOE"]
+  role_ownership_grant = "SYSADMIN"
 
-  database_grants = [
-    {
-      database_name          = "LOGS_DB"
-      privileges             = ["USAGE"]
-      enable_multiple_grants = true
-    }
-  ]
+  granted_to_users = ["SAMPLE_USER"]
+  granted_to_roles = [snowflake_role.role_1.name]
+
+  granted_roles          = [snowflake_role.role_2.name]
+  granted_database_roles = ["${snowflake_database.this.name}.${snowflake_database_role.this.name}"]
+
+  account_grants = [{
+    privileges = ["CREATE DATABASE"]
+  }]
+
+  account_objects_grants = {
+    DATABASE = [
+      {
+        privileges  = ["USAGE"]
+        object_name = snowflake_database.this.name
+      },
+    ]
+    WAREHOUSE = [
+      {
+        all_privileges    = true
+        with_grant_option = true
+        object_name       = snowflake_warehouse.this.name
+      }
+    ]
+  }
 
   schema_grants = [
     {
-      database_name = "LOGS_DB"
-      schema_name   = "BRONZE"
+      database_name = snowflake_database.this.name
+      schema_name   = snowflake_schema.schema_1.name
       privileges    = ["USAGE"]
-    }
-  ]
-
-  table_grants = [
-    {
-      database_name = "LOGS_DB"
-      schema_name   = "BRONZE"
-      on_future     = true
-      privileges    = ["SELECT"]
-    }
-  ]
-
-  view_grants = [
-    {
-      database_name = "LOGS_DB"
-      schema_name   = "BRONZE"
-      on_all        = true
-      privileges    = ["SELECT"]
-    }
-  ]
-
-  dynamic_table_grants = [
-    {
-      database_name  = "LOGS_DB"
-      on_all         = true
-      on_future      = true
-      all_privileges = true
     },
     {
-      database_name  = "TEST_DB"
-      schema_name    = "BRONZE"
-      on_all         = true
-      all_privileges = true
+      database_name              = snowflake_database.this.name
+      schema_name                = snowflake_schema.schema_2.name
+      all_privileges             = true
+      future_schemas_in_database = true
+      with_grant_option          = true
     },
-    {
-      database_name      = "TEST_DB"
-      schema_name        = "SILVER"
-      dynamic_table_name = "EXAMPLE"
-      privileges         = ["SELECT"]
-    },
+  ]
+
+  schema_objects_grants = {
+    TABLE = [
+      {
+        database_name     = snowflake_database.this.name
+        schema_name       = snowflake_schema.schema_1.name
+        on_all            = true
+        on_future         = true
+        all_privileges    = true
+        with_grant_option = true
+      }
+    ]
+
+    VIEW = [
+      {
+        database_name = snowflake_database.this.name
+        on_future     = true
+        privileges    = ["SELECT"]
+      }
+    ]
+
+    "DYNAMIC TABLE" = [
+      {
+        database_name  = snowflake_database.this.name
+        schema_name    = snowflake_schema.schema_1.name
+        on_all         = true
+        all_privileges = true
+      },
+      {
+        database_name = snowflake_database.this.name
+        schema_name   = snowflake_schema.schema_2.name
+        object_name   = "EXAMPLE"
+        privileges    = ["SELECT"]
+      },
+    ]
+  }
+
+  depends_on = [
+    snowflake_database.this,
+    snowflake_warehouse.this,
+    snowflake_schema.schema_1,
+    snowflake_schema.schema_2,
+    snowflake_role.role_1,
+    snowflake_role.role_2,
+    snowflake_database_role.this,
+    snowflake_user.this,
+    snowflake_table.this,
+    snowflake_dynamic_table.this,
   ]
 }

@@ -4,12 +4,6 @@ variable "comment" {
   default     = null
 }
 
-variable "enable_multiple_grants" {
-  description = "When this is set to true, multiple grants of the same type can be created for all grants in the role. This will cause Terraform to not revoke grants applied to roles and objects outside Terraform"
-  type        = bool
-  default     = null
-}
-
 variable "role_ownership_grant" {
   description = "The name of the role to grant ownership"
   type        = string
@@ -18,6 +12,12 @@ variable "role_ownership_grant" {
 
 variable "granted_roles" {
   description = "Roles granted to this role"
+  type        = list(string)
+  default     = []
+}
+
+variable "granted_database_roles" {
+  description = "Database Roles granted to this role"
   type        = list(string)
   default     = []
 }
@@ -35,111 +35,137 @@ variable "granted_to_users" {
 }
 
 variable "account_grants" {
-  description = "Grants on an account level"
-  type        = list(string)
-  default     = []
-}
-
-variable "database_grants" {
-  description = "Grants on a database level"
+  description = "Grants on a account level"
   type = list(object({
-    database_name          = string
-    privileges             = list(string)
-    enable_multiple_grants = optional(bool)
+    all_privileges    = optional(bool)
+    with_grant_option = optional(bool, false)
+    privileges        = optional(list(string), null)
   }))
   default = []
+  validation {
+    condition     = alltrue([for grant in var.account_grants : (grant.privileges != null) != (grant.all_privileges == true)])
+    error_message = "Variable `account_grants` fails validation - only one of `privileges` or `all_privileges` can be set."
+  }
+}
+
+variable "account_objects_grants" {
+  description = <<EOT
+  Grants on account object level.
+  Account objects list: USER | RESOURCE MONITOR | WAREHOUSE | COMPUTE POOL | DATABASE | INTEGRATION | FAILOVER GROUP | REPLICATION GROUP | EXTERNAL VOLUME
+  Object type is used as a key in the map.
+
+  Exmpale usage:
+
+  ```
+  account_object_grants = {
+    "WAREHOUSE" = [
+      {
+        all_privileges = true
+        with_grant_option = true
+        object_name = "TEST_USER"
+      }
+    ]
+    "DATABASE" = [
+      {
+        privileges = ["CREATE SCHEMA", "CREATE DATABASE ROLE"]
+        object_name = "TEST_DATABASE"
+      },
+      {
+        privileges = ["CREATE SCHEMA"]
+        object_name = "OTHER_DATABASE"
+      }
+    ]
+  }
+  ```
+
+  Note: You can find a list of all object types [here](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_privileges_to_account_role#nested-schema-for-on_account_object)
+  EOT
+  type = map(list(object({
+    all_privileges    = optional(bool)
+    with_grant_option = optional(bool, false)
+    privileges        = optional(list(string), null)
+    object_name       = string
+  })))
+  default = {}
+  validation {
+    condition     = alltrue([for object_type, grants in var.account_objects_grants : alltrue([for grant in grants : (grant.privileges != null) != (grant.all_privileges != null)])])
+    error_message = "Variable `account_objects_grants` fails validation - only one of `privileges` or `all_privileges` can be set."
+  }
 }
 
 variable "schema_grants" {
   description = "Grants on a schema level"
   type = list(object({
-    database_name          = string
-    schema_name            = optional(string)
-    privileges             = list(string)
-    on_all                 = optional(bool)
-    on_future              = optional(bool)
-    enable_multiple_grants = optional(bool)
+    all_privileges             = optional(bool)
+    with_grant_option          = optional(bool, false)
+    privileges                 = optional(list(string), null)
+    all_schemas_in_database    = optional(bool, false)
+    future_schemas_in_database = optional(bool, false)
+    database_name              = string
+    schema_name                = optional(string, null)
   }))
   default = []
   validation {
-    condition     = alltrue([for schema_grant in var.schema_grants : anytrue([schema_grant.schema_name != null, schema_grant.on_future, schema_grant.on_all])])
-    error_message = "Variable `schema_grants` fails validation - one of `schema_name`, `on_future` or `on_all` has to be set (not null / true)."
+    condition     = alltrue([for grant in var.schema_grants : (grant.privileges != null) != (grant.all_privileges == true)])
+    error_message = "Variable `schema_grants` fails validation - only one of `privileges` or `all_privileges` can be set."
   }
 }
 
-variable "table_grants" {
-  description = "Grants on a table level"
-  type = list(object({
-    database_name          = string
-    schema_name            = string
-    table_name             = optional(string)
-    on_future              = optional(bool)
-    on_all                 = optional(bool)
-    privileges             = list(string)
-    enable_multiple_grants = optional(bool)
-  }))
-  default = []
-  validation {
-    condition     = alltrue([for table_grant in var.table_grants : anytrue([table_grant.table_name != null, table_grant.on_future, table_grant.on_all])])
-    error_message = "Variable `table_grants` fails validation - one of `table_name`, `on_future` or `on_all` has to be set (not null / true)."
-  }
-}
+variable "schema_objects_grants" {
+  description = <<EOF
+  Grants on a schema object level
 
-variable "external_table_grants" {
-  description = "Grants on a external table level"
-  type = list(object({
-    database_name          = string
-    schema_name            = string
-    external_table_name    = optional(string)
-    on_future              = optional(bool)
-    on_all                 = optional(bool)
-    privileges             = list(string)
-    enable_multiple_grants = optional(bool)
-  }))
-  default = []
-  validation {
-    condition     = alltrue([for external_table_grant in var.external_table_grants : anytrue([external_table_grant.external_table_name != null, external_table_grant.on_future, external_table_grant.on_all])])
-    error_message = "Variable `external_table_grants` fails validation - one of `external_table_name`, `on_future` or `on_all` has to be set (not null / true)."
-  }
-}
+  Example usage:
 
-variable "view_grants" {
-  description = "Grants on a view level"
-  type = list(object({
-    database_name          = string
-    schema_name            = string
-    view_name              = optional(string)
-    on_future              = optional(bool)
-    on_all                 = optional(bool)
-    privileges             = list(string)
-    enable_multiple_grants = optional(bool)
-  }))
-  default = []
-  validation {
-    condition     = alltrue([for view_grant in var.view_grants : anytrue([view_grant.view_name != null, view_grant.on_future, view_grant.on_all])])
-    error_message = "Variable `view_grants` fails validation - one of `view_name`, `on_future` or `on_all` has to be set (not null / true)."
+  ```
+  schema_objects_grants = {
+    "TABLE" = [
+      {
+        privileges  = ["SELECT"]
+        object_name = snowflake_table.table_1.name
+        schema_name = snowflake_schema.this.name
+      },
+      {
+        all_privileges = true
+        object_name    = snowflake_table.table_2.name
+        schema_name    = snowflake_schema.this.name
+      }
+    ]
+    "ALERT" = [
+      {
+        all_privileges = true
+        on_future      = true
+        on_all         = true
+      }
+    ]
   }
-}
+  ```
 
-variable "dynamic_table_grants" {
-  description = "Grants on a dynamic_table level"
-  type = list(object({
-    database_name      = string
-    schema_name        = optional(string)
-    dynamic_table_name = optional(string)
-    on_future          = optional(bool, false)
-    on_all             = optional(bool, false)
-    all_privileges     = optional(bool)
-    privileges         = optional(list(string), null)
-  }))
-  default = []
+  Note: If you don't provide a schema_name, the grants will be created for all objects of that type in the database.
+        You can find a list of all object types [here](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_privileges_to_database_role#object_type)
+  EOF
+  type = map(list(object({
+    all_privileges    = optional(bool)
+    with_grant_option = optional(bool)
+    privileges        = optional(list(string))
+    object_name       = optional(string)
+    on_all            = optional(bool, false)
+    schema_name       = optional(string)
+    database_name     = string
+    on_future         = optional(bool, false)
+  })))
+  default = {}
+
   validation {
-    condition     = alltrue([for grant in var.dynamic_table_grants : !anytrue([grant.privileges == null && grant.all_privileges == null, grant.privileges != null && grant.all_privileges != null])])
-    error_message = "Variable `dynamic_table_grants` fails validation - only one of `privileges` or `all_privileges` can be set."
+    condition     = alltrue([for object_type, grants in var.schema_objects_grants : alltrue([for grant in grants : (grant.privileges != null) != (grant.all_privileges != null)])])
+    error_message = "Variable `schema_objects_grants` fails validation - only one of `privileges` or `all_privileges` can be set."
   }
+
   validation {
-    condition     = alltrue([for grant in var.dynamic_table_grants : !alltrue([grant.dynamic_table_name != null, grant.on_future || grant.on_all])])
-    error_message = "Variable `dynamic_table_grants` fails validation - when `dynamic_table_name` is set, `on_future` and `on_all` have to be false / not set."
+    condition = alltrue([for object_type, grants in var.schema_objects_grants : alltrue([for grant in grants :
+      !(grant.object_name != null && (grant.on_all == true || grant.on_future == true))
+    ])])
+    error_message = "Variable `schema_objects_grants` fails validation - `object_name` cannot be set with `on_all` or `on_future`."
   }
 }
 

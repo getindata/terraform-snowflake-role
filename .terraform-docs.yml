@@ -6,6 +6,10 @@ sections:
   hide: []
   show: [all]
 
+recursive:
+  enabled: true
+  path: examples
+
 content: |-
   {{ .Header }}
 
