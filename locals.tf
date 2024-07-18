@@ -5,75 +5,91 @@ locals {
     lookup(module.role_label.descriptors, var.descriptor_name, module.role_label.id), "/${module.role_label.delimiter}${module.role_label.delimiter}+/", module.role_label.delimiter
   ), module.role_label.delimiter) : null
 
-  granted_roles    = var.granted_roles
-  granted_to_roles = var.granted_to_roles
-  granted_to_users = var.granted_to_users
+  account_grants = {
+    for index, grant in var.account_grants : grant.all_privileges == true ? "ALL" : "CUSTOM_${index}" => grant
+  }
 
-  database_grants = merge([for database_grant in var.database_grants : {
-    for privilege in database_grant.privileges : "${database_grant.database_name}/${privilege}" => {
-      database_name          = database_grant.database_name
-      enable_multiple_grants = database_grant.enable_multiple_grants == null ? var.enable_multiple_grants : database_grant.enable_multiple_grants
-      privilege              = privilege
-    }
-  }]...)
+  account_objects_grants = {
+    for index, grant in flatten([
+      for object_type, grants in var.account_objects_grants : [
+        for grant in grants :
+        merge(
+          grant,
+          {
+            object_type = object_type
+          }
+        )
+      ]
+    ]) : grant.all_privileges == true ? "${grant.object_type}_${grant.object_name}_ALL" : "${grant.object_type}_${grant.object_name}_CUSTOM_${index}" => grant
+  }
 
-  schema_grants = merge([for schema_grant in var.schema_grants : {
-    for privilege in schema_grant.privileges : "${schema_grant.database_name}/${coalesce(schema_grant.schema_name, schema_grant.on_future != null ? "on_future" : "on_all")}/${privilege}" => {
-      database_name          = schema_grant.database_name
-      schema_name            = schema_grant.schema_name
-      on_future              = schema_grant.on_future
-      on_all                 = schema_grant.on_all
-      enable_multiple_grants = schema_grant.enable_multiple_grants == null ? var.enable_multiple_grants : schema_grant.enable_multiple_grants
-      privilege              = privilege
-    }
-  }]...)
+  schema_grants = {
+    for index, schema_grant in flatten([
+      for grant in var.schema_grants : grant.future_schemas_in_database && grant.all_schemas_in_database ? [
+        merge(
+          grant,
+          {
+            future_schemas_in_database = true,
+            all_schemas_in_database    = false
+          }
+        ),
+        merge(
+          grant,
+          {
+            future_schemas_in_database = false,
+            all_schemas_in_database    = true
+          }
+        )
+      ] : [grant]
+    ]) :
+    "${schema_grant.schema_name != null ? "${schema_grant.database_name}_${schema_grant.schema_name}" :
+      schema_grant.all_schemas_in_database != false ? "${schema_grant.database_name}_ALL_SCHEMAS" :
+      schema_grant.future_schemas_in_database != false ? "${schema_grant.database_name}_FUTURE_SCHEMAS" : ""
+    }_${schema_grant.all_privileges == true ? "ALL" : "CUSTOM_${index}"}" => schema_grant
+  }
 
-  table_grants = merge([for table_grant in var.table_grants : {
-    for privilege in table_grant.privileges : "${table_grant.database_name}/${table_grant.schema_name}/${coalesce(table_grant.table_name, table_grant.on_future != null ? "on_future" : "on_all")}/${privilege}" => {
-      database_name          = table_grant.database_name
-      schema_name            = table_grant.schema_name
-      table_name             = table_grant.table_name
-      on_future              = table_grant.on_future
-      on_all                 = table_grant.on_all
-      enable_multiple_grants = table_grant.enable_multiple_grants == null ? var.enable_multiple_grants : table_grant.enable_multiple_grants
-      privilege              = privilege
-    }
-  }]...)
-
-  external_table_grants = merge([for table_grant in var.external_table_grants : {
-    for privilege in table_grant.privileges : "${table_grant.database_name}/${table_grant.schema_name}/${coalesce(table_grant.external_table_name, table_grant.on_future != null ? "on_future" : "on_all")}/${privilege}" => {
-      database_name          = table_grant.database_name
-      schema_name            = table_grant.schema_name
-      external_table_name    = table_grant.external_table_name
-      on_future              = table_grant.on_future
-      on_all                 = table_grant.on_all
-      enable_multiple_grants = table_grant.enable_multiple_grants == null ? var.enable_multiple_grants : table_grant.enable_multiple_grants
-      privilege              = privilege
-    }
-  }]...)
-
-  view_grants = merge([for view_grant in var.view_grants : {
-    for privilege in view_grant.privileges : "${view_grant.database_name}/${view_grant.schema_name}/${coalesce(view_grant.view_name, view_grant.on_future != null ? "on_future" : "on_all")}/${privilege}" => {
-      database_name          = view_grant.database_name
-      schema_name            = view_grant.schema_name
-      view_name              = view_grant.view_name
-      on_future              = view_grant.on_future
-      on_all                 = view_grant.on_all
-      enable_multiple_grants = view_grant.enable_multiple_grants == null ? var.enable_multiple_grants : view_grant.enable_multiple_grants
-      privilege              = privilege
-    }
-  }]...)
-
-  dynamic_table_grants = merge([for grant in var.dynamic_table_grants : {
-    for key, value in { "dynamic_table_name" = grant.dynamic_table_name, "on_all" = grant.on_all, "on_future" = grant.on_future } :
-    "${grant.database_name}/${coalesce(grant.schema_name, "all")}/${key == "dynamic_table_name" ? value : key}" => {
-      database_name      = grant.database_name
-      schema_name        = grant.schema_name
-      dynamic_table_name = key == "dynamic_table_name" ? value : null
-      on_future          = key == "on_future" ? value : false
-      on_all             = key == "on_all" ? value : false
-      privileges         = grant.privileges
-      all_privileges     = grant.all_privileges
-    } if(key == "dynamic_table_name" && value != null) || value == true
-  }]...)
+  schema_objects_grants = {
+    for index, grant in flatten([
+      for object_type, grants in var.schema_objects_grants : [
+        for grant in grants :
+        grant.on_all && grant.on_future ? [
+          merge(
+            grant,
+            {
+              object_type = "${object_type}S",
+              on_future   = true,
+              on_all      = false
+            }
+          ),
+          merge(
+            grant,
+            {
+              object_type = "${object_type}S",
+              on_future   = false,
+              on_all      = true
+            }
+          )
+          ] : [
+          merge(
+            grant,
+            {
+              object_type = grant.on_all || grant.on_future ? "${object_type}S" : object_type
+            }
+          )
+        ]
+      ]
+      ]) : "${
+      grant.object_type != null && grant.object_name != null ?
+      "${grant.object_type}_${grant.database_name}_${grant.schema_name}_${grant.object_name}_${grant.all_privileges == true ? "ALL" : "CUSTOM_${index}"}"
+      : ""
+      }${
+      grant.on_all != null && grant.on_all ?
+      "ALL_${grant.object_type}_${grant.database_name}${grant.schema_name != null ? "_${grant.schema_name}_${grant.all_privileges == true ? "ALL" : "CUSTOM_${index}"}" : ""}"
+      : ""
+      }${
+      grant.on_future != null && grant.on_future ?
+      "FUTURE_${grant.object_type}_${grant.database_name}${grant.schema_name != null ? "_${grant.schema_name}_${grant.all_privileges == true ? "ALL" : "CUSTOM_${index}"}" : ""}"
+      : ""
+    }" => grant
+  }
 }
