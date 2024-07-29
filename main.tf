@@ -8,7 +8,7 @@ module "role_label" {
   label_value_case    = coalesce(module.this.context.label_value_case, "upper")
 }
 
-resource "snowflake_role" "this" {
+resource "snowflake_account_role" "this" {
   count = module.this.enabled ? 1 : 0
 
   name    = local.name_from_descriptor
@@ -22,28 +22,28 @@ resource "snowflake_grant_ownership" "this" {
   outbound_privileges = "REVOKE"
   on {
     object_type = "ROLE"
-    object_name = one(snowflake_role.this[*].name)
+    object_name = one(snowflake_account_role.this[*].name)
   }
 }
 
 resource "snowflake_grant_account_role" "granted_roles" {
   for_each = toset(module.this.enabled ? var.granted_roles : [])
 
-  parent_role_name = one(snowflake_role.this[*].name)
+  parent_role_name = one(snowflake_account_role.this[*].name)
   role_name        = each.value
 }
 
 resource "snowflake_grant_account_role" "granted_to_roles" {
   for_each = toset(module.this.enabled ? var.granted_to_roles : [])
 
-  role_name        = one(snowflake_role.this[*].name)
+  role_name        = one(snowflake_account_role.this[*].name)
   parent_role_name = each.value
 }
 
 resource "snowflake_grant_account_role" "granted_to_users" {
   for_each = toset(module.this.enabled ? var.granted_to_users : [])
 
-  role_name = one(snowflake_role.this[*].name)
+  role_name = one(snowflake_account_role.this[*].name)
   user_name = each.value
 }
 
@@ -51,14 +51,14 @@ resource "snowflake_grant_database_role" "granted_db_roles" {
   for_each = toset(module.this.enabled ? var.granted_database_roles : [])
 
   database_role_name = each.value
-  parent_role_name   = one(snowflake_role.this[*].name)
+  parent_role_name   = one(snowflake_account_role.this[*].name)
 }
 
 
 resource "snowflake_grant_privileges_to_account_role" "account_grants" {
   for_each = module.this.enabled ? local.account_grants : {}
 
-  account_role_name = one(snowflake_role.this[*].name)
+  account_role_name = one(snowflake_account_role.this[*].name)
   on_account        = true
 
   all_privileges    = each.value.all_privileges
@@ -69,7 +69,7 @@ resource "snowflake_grant_privileges_to_account_role" "account_grants" {
 resource "snowflake_grant_privileges_to_account_role" "account_object_grants" {
   for_each = module.this.enabled ? local.account_objects_grants : {}
 
-  account_role_name = one(snowflake_role.this[*].name)
+  account_role_name = one(snowflake_account_role.this[*].name)
   all_privileges    = each.value.all_privileges
   privileges        = each.value.privileges
   with_grant_option = each.value.with_grant_option
@@ -83,7 +83,7 @@ resource "snowflake_grant_privileges_to_account_role" "account_object_grants" {
 resource "snowflake_grant_privileges_to_account_role" "schema_grants" {
   for_each = module.this.enabled ? local.schema_grants : {}
 
-  account_role_name = one(snowflake_role.this[*].name)
+  account_role_name = one(snowflake_account_role.this[*].name)
   all_privileges    = each.value.all_privileges
   privileges        = each.value.privileges
   with_grant_option = each.value.with_grant_option
@@ -98,7 +98,7 @@ resource "snowflake_grant_privileges_to_account_role" "schema_grants" {
 resource "snowflake_grant_privileges_to_account_role" "schema_objects_grants" {
   for_each = module.this.enabled ? local.schema_objects_grants : {}
 
-  account_role_name = one(snowflake_role.this[*].name)
+  account_role_name = one(snowflake_account_role.this[*].name)
   all_privileges    = each.value.all_privileges
   privileges        = each.value.privileges
   with_grant_option = each.value.with_grant_option

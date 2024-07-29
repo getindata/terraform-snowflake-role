@@ -16,11 +16,11 @@ resource "snowflake_schema" "schema_2" {
   database = snowflake_database.this.name
 }
 
-resource "snowflake_role" "role_1" {
+resource "snowflake_account_role" "role_1" {
   name = "SAMPLE_ROLE_1"
 }
 
-resource "snowflake_role" "role_2" {
+resource "snowflake_account_role" "role_2" {
   name = "SAMPLE_ROLE_2"
 }
 
@@ -65,9 +65,9 @@ module "snowflake_role" {
   role_ownership_grant = "SYSADMIN"
 
   granted_to_users = ["SAMPLE_USER"]
-  granted_to_roles = [snowflake_role.role_1.name]
+  granted_to_roles = [snowflake_account_role.role_1.name]
 
-  granted_roles          = [snowflake_role.role_2.name]
+  granted_roles          = [snowflake_account_role.role_2.name]
   granted_database_roles = ["${snowflake_database.this.name}.${snowflake_database_role.this.name}"]
 
   account_grants = [{
@@ -146,8 +146,8 @@ module "snowflake_role" {
     snowflake_warehouse.this,
     snowflake_schema.schema_1,
     snowflake_schema.schema_2,
-    snowflake_role.role_1,
-    snowflake_role.role_2,
+    snowflake_account_role.role_1,
+    snowflake_account_role.role_2,
     snowflake_database_role.this,
     snowflake_user.this,
     snowflake_table.this,
