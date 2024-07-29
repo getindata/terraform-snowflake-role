@@ -81,6 +81,7 @@ Due to breaking changes in Snowflake provider and additional code optimizations,
 
 List of code and variable (API) changes:
 
+- Switched to `snowflake_account_role` resource instead of provider-deprecated `snowflake_role`
 - Switched to `snowflake_grant_privileges_to_account_role` resource instead of provider-removed `snowflake_*_grant`
 - Switched to `snowflake_grant_account_role` resource instead of provider-removed `snowflake_role_grants`
 - Switched to `snowflake_grant_ownership` resource instead of provider-removed `snowflake_role_ownership_grant`
@@ -154,19 +155,20 @@ For more information, refer to [variables.tf](variables.tf), list of inputs belo
 
 | Name | Version |
 |------|---------|
-| <a name="provider_snowflake"></a> [snowflake](#provider\_snowflake) | ~> 0.90 |
+| <a name="provider_snowflake"></a> [snowflake](#provider\_snowflake) | ~> 0.94 |
 
 ## Requirements
 
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3 |
-| <a name="requirement_snowflake"></a> [snowflake](#requirement\_snowflake) | ~> 0.90 |
+| <a name="requirement_snowflake"></a> [snowflake](#requirement\_snowflake) | ~> 0.94 |
 
 ## Resources
 
 | Name | Type |
 |------|------|
+| [snowflake_account_role.this](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/account_role) | resource |
 | [snowflake_grant_account_role.granted_roles](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_account_role) | resource |
 | [snowflake_grant_account_role.granted_to_roles](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_account_role) | resource |
 | [snowflake_grant_account_role.granted_to_users](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_account_role) | resource |
@@ -176,7 +178,6 @@ For more information, refer to [variables.tf](variables.tf), list of inputs belo
 | [snowflake_grant_privileges_to_account_role.account_object_grants](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_privileges_to_account_role) | resource |
 | [snowflake_grant_privileges_to_account_role.schema_grants](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_privileges_to_account_role) | resource |
 | [snowflake_grant_privileges_to_account_role.schema_objects_grants](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_privileges_to_account_role) | resource |
-| [snowflake_role.this](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role) | resource |
 <!-- END_TF_DOCS -->
 
 ## CONTRIBUTING
