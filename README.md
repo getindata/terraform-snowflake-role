@@ -81,6 +81,7 @@ Due to breaking changes in Snowflake provider and additional code optimizations,
 
 List of code and variable (API) changes:
 
+- Switched to `snowflake_account_role` resource instead of provider-deprecated `snowflake_role`
 - Switched to `snowflake_grant_privileges_to_account_role` resource instead of provider-removed `snowflake_*_grant`
 - Switched to `snowflake_grant_account_role` resource instead of provider-removed `snowflake_role_grants`
 - Switched to `snowflake_grant_ownership` resource instead of provider-removed `snowflake_role_ownership_grant`
