@@ -1,5 +1,5 @@
 locals {
-  context_template = lookup(var.context_templates, var.context_template_name, null)
+  context_template = lookup(var.context_templates, var.naming_scheme.context_template_name, null)
 
   account_grants = {
     for index, grant in var.account_grants : grant.all_privileges == true ? "ALL" : "CUSTOM_${index}" => grant

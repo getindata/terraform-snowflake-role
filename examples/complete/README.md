@@ -39,6 +39,7 @@ terraform destroy -var-file=fixtures.tfvars
 |------|--------|---------|
 | <a name="module_snowflake_role_1"></a> [snowflake\_role\_1](#module\_snowflake\_role\_1) | ../../ | n/a |
 | <a name="module_snowflake_role_2"></a> [snowflake\_role\_2](#module\_snowflake\_role\_2) | ../../ | n/a |
+| <a name="module_snowflake_role_3"></a> [snowflake\_role\_3](#module\_snowflake\_role\_3) | ../../ | n/a |
 
 ## Outputs
 
@@ -46,6 +47,7 @@ terraform destroy -var-file=fixtures.tfvars
 |------|-------------|
 | <a name="output_snowflake_role_1"></a> [snowflake\_role\_1](#output\_snowflake\_role\_1) | Snowflake role outputs |
 | <a name="output_snowflake_role_2"></a> [snowflake\_role\_2](#output\_snowflake\_role\_2) | Snowflake role outputs |
+| <a name="output_snowflake_role_3"></a> [snowflake\_role\_3](#output\_snowflake\_role\_3) | Snowflake role outputs |
 
 ## Providers
 

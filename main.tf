@@ -1,9 +1,14 @@
 data "context_label" "this" {
-  properties = local.context_template == null ? var.context_properties : null
+  delimiter  = local.context_template == null ? var.naming_scheme.delimiter : null
+  properties = local.context_template == null ? var.naming_scheme.properties : null
   template   = local.context_template
-  values = {
-    name = var.name
-  }
+
+  replace_chars_regex = var.naming_scheme.replace_chars_regex
+
+  values = merge(
+    var.naming_scheme.extra_labels,
+    { name = var.name }
+  )
 }
 
 resource "snowflake_account_role" "this" {

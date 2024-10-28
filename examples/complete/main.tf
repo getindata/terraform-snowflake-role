@@ -158,9 +158,14 @@ module "snowflake_role_1" {
 module "snowflake_role_2" {
   source = "../../"
 
-  name                  = "SAMPLE_TEST_2"
-  context_templates     = var.context_templates
-  context_template_name = "snowflake-project-role"
+  name              = "SAMPLE_TEST_2"
+  context_templates = var.context_templates
+  naming_scheme = {
+    context_template_name = "snowflake-project-role"
+    extra_labels = {
+      project = "PROJECT"
+    }
+  }
 
   account_grants = [
     {
@@ -175,5 +180,17 @@ module "snowflake_role_2" {
         object_name    = snowflake_database.this.name
       }
     ]
+  }
+}
+
+module "snowflake_role_3" {
+  source = "../../"
+
+  name = "SAMPLE-TEST-3"
+  naming_scheme = {
+    properties          = ["name", "schema", "environment"]
+    delimiter           = "_"
+    replace_chars_regex = "-"
+    extra_labels        = { schema = "SCHEMA" }
   }
 }

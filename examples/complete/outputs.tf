@@ -7,3 +7,8 @@ output "snowflake_role_2" {
   description = "Snowflake role outputs"
   value       = module.snowflake_role_2
 }
+
+output "snowflake_role_3" {
+  description = "Snowflake role outputs"
+  value       = module.snowflake_role_3
+}

@@ -174,20 +174,27 @@ variable "schema_objects_grants" {
   }
 }
 
-variable "context_properties" {
-  description = "Specifies list of context properties used to create a Snowflake User name - this variable conflicts with `context_template`"
-  type        = list(string)
-  default     = ["environment", "name"]
+variable "naming_scheme" {
+  description = <<EOT
+  Naming scheme configuration for the resource. This configuration is used to generate names using context provider:
+    - `properties` - list of properties to use when creating the name - is superseded by `var.context_templates`
+    - `delimiter` - delimited used to create the name from `properties` - is superseded by `var.context_templates`
+    - `context_template_name` - name of the context template used to create the name
+    - `replace_chars_regex` - regex to use for replacing characters in labels created by the provider - any characters that match the regex will be removed from the name
+    - `extra_labels` - map of extra label-value pairs, used to create a name
+  EOT
+  type = object({
+    properties            = optional(list(string), ["environment", "name"])
+    delimiter             = optional(string, "_")
+    context_template_name = optional(string, "snowflake-role")
+    replace_chars_regex   = optional(string, "[^a-zA-Z0-9_]")
+    extra_labels          = optional(map(string))
+  })
+  default = {}
 }
 
 variable "context_templates" {
-  description = "Map of context templates used for naming conventions - this variable conflicts with `context_properties`"
+  description = "Map of context templates used for naming conventions - this variable supersedes `naming_scheme.properties` and `naming_scheme.delimiter` configuration"
   type        = map(string)
   default     = {}
-}
-
-variable "context_template_name" {
-  description = "Name of the context template used to create resource name - this variable is used when, `var.context_templates` is set"
-  type        = string
-  default     = "snowflake-role"
 }
