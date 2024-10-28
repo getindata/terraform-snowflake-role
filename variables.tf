@@ -1,3 +1,8 @@
+variable "name" {
+  description = "Name of the resource"
+  type        = string
+}
+
 variable "comment" {
   description = "Role description"
   type        = string
@@ -169,8 +174,20 @@ variable "schema_objects_grants" {
   }
 }
 
-variable "descriptor_name" {
-  description = "Name of the descriptor used to form a resource name"
+variable "context_properties" {
+  description = "Specifies list of context properties used to create a Snowflake User name - this variable conflicts with `context_template`"
+  type        = list(string)
+  default     = ["environment", "name"]
+}
+
+variable "context_templates" {
+  description = "Map of context templates used for naming conventions - this variable conflicts with `context_properties`"
+  type        = map(string)
+  default     = {}
+}
+
+variable "context_template_name" {
+  description = "Name of the context template used to create resource name - this variable is used when, `var.context_templates` is set"
   type        = string
   default     = "snowflake-role"
 }

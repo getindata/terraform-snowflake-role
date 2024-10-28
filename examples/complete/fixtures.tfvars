@@ -1,13 +1,4 @@
-namespace = "gid"
-stage     = "example"
-
-descriptor_formats = {
-  snowflake-role = {
-    labels = ["attributes", "name"]
-    format = "%v_%v_ROLE"
-  }
-}
-
-tags = {
-  Terraform = "True"
+context_templates = {
+  snowflake-role         = "{{.environment}}_{{.name}}"
+  snowflake-project-role = "{{.environment}}_{{.project}}_{{.name}}"
 }

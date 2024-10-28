@@ -56,11 +56,11 @@ resource "snowflake_dynamic_table" "this" {
   }
 }
 
-module "snowflake_role" {
-  source  = "../../"
-  context = module.this.context
+module "snowflake_role_1" {
+  source = "../../"
 
-  name = "SAMPLE_TEST"
+  name              = "SAMPLE_TEST_1"
+  context_templates = var.context_templates
 
   role_ownership_grant = "SYSADMIN"
 
@@ -141,16 +141,39 @@ module "snowflake_role" {
     ]
   }
 
-  depends_on = [
-    snowflake_database.this,
-    snowflake_warehouse.this,
-    snowflake_schema.schema_1,
-    snowflake_schema.schema_2,
-    snowflake_account_role.role_1,
-    snowflake_account_role.role_2,
-    snowflake_database_role.this,
-    snowflake_user.this,
-    snowflake_table.this,
-    snowflake_dynamic_table.this,
+  # depends_on = [
+  #   snowflake_database.this,
+  #   snowflake_warehouse.this,
+  #   snowflake_schema.schema_1,
+  #   snowflake_schema.schema_2,
+  #   snowflake_account_role.role_1,
+  #   snowflake_account_role.role_2,
+  #   snowflake_database_role.this,
+  #   snowflake_user.this,
+  #   snowflake_table.this,
+  #   snowflake_dynamic_table.this,
+  # ]
+}
+
+module "snowflake_role_2" {
+  source = "../../"
+
+  name                  = "SAMPLE_TEST_2"
+  context_templates     = var.context_templates
+  context_template_name = "snowflake-project-role"
+
+  account_grants = [
+    {
+      privileges = ["CREATE DATABASE"]
+    }
   ]
+
+  account_objects_grants = {
+    "DATABASE" = [
+      {
+        all_privileges = true
+        object_name    = snowflake_database.this.name
+      }
+    ]
+  }
 }

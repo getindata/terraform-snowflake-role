@@ -3,8 +3,7 @@ resource "snowflake_database" "this" {
 }
 
 module "snowflake_role" {
-  source  = "../../"
-  context = module.this.context
+  source = "../../"
 
   name = "SIMPLE_ROLE"
 
