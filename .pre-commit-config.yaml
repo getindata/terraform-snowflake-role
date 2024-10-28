@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/gruntwork-io/pre-commit
-    rev: "v0.1.23" # Get the latest from: https://github.com/gruntwork-io/pre-commit/releases
+    rev: "v0.1.24" # Get the latest from: https://github.com/gruntwork-io/pre-commit/releases
     hooks:
       - id: terraform-validate # It should be the first step as it runs terraform init required by tflint
       - id: terraform-fmt
