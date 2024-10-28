@@ -141,18 +141,18 @@ module "snowflake_role_1" {
     ]
   }
 
-  # depends_on = [
-  #   snowflake_database.this,
-  #   snowflake_warehouse.this,
-  #   snowflake_schema.schema_1,
-  #   snowflake_schema.schema_2,
-  #   snowflake_account_role.role_1,
-  #   snowflake_account_role.role_2,
-  #   snowflake_database_role.this,
-  #   snowflake_user.this,
-  #   snowflake_table.this,
-  #   snowflake_dynamic_table.this,
-  # ]
+  depends_on = [
+    snowflake_database.this,
+    snowflake_warehouse.this,
+    snowflake_schema.schema_1,
+    snowflake_schema.schema_2,
+    snowflake_account_role.role_1,
+    snowflake_account_role.role_2,
+    snowflake_database_role.this,
+    snowflake_user.this,
+    snowflake_table.this,
+    snowflake_dynamic_table.this,
+  ]
 }
 
 module "snowflake_role_2" {
