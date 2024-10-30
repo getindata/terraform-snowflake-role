@@ -56,11 +56,11 @@ resource "snowflake_dynamic_table" "this" {
   }
 }
 
-module "snowflake_role" {
-  source  = "../../"
-  context = module.this.context
+module "snowflake_role_1" {
+  source = "../../"
 
-  name = "SAMPLE_TEST"
+  name              = "SAMPLE_TEST_1"
+  context_templates = var.context_templates
 
   role_ownership_grant = "SYSADMIN"
 
@@ -153,4 +153,44 @@ module "snowflake_role" {
     snowflake_table.this,
     snowflake_dynamic_table.this,
   ]
+}
+
+module "snowflake_role_2" {
+  source = "../../"
+
+  name              = "SAMPLE_TEST_2"
+  context_templates = var.context_templates
+  name_scheme = {
+    context_template_name = "snowflake-project-role"
+    extra_values = {
+      project = "PROJECT"
+    }
+  }
+
+  account_grants = [
+    {
+      privileges = ["CREATE DATABASE"]
+    }
+  ]
+
+  account_objects_grants = {
+    "DATABASE" = [
+      {
+        all_privileges = true
+        object_name    = snowflake_database.this.name
+      }
+    ]
+  }
+}
+
+module "snowflake_role_3" {
+  source = "../../"
+
+  name = "SAMPLE-TEST-3"
+  name_scheme = {
+    properties          = ["name", "schema", "environment"]
+    delimiter           = "_"
+    replace_chars_regex = "-"
+    extra_values        = { schema = "SCHEMA" }
+  }
 }
