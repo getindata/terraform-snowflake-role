@@ -1,12 +1,12 @@
 data "context_label" "this" {
-  delimiter  = local.context_template == null ? var.naming_scheme.delimiter : null
-  properties = local.context_template == null ? var.naming_scheme.properties : null
+  delimiter  = local.context_template == null ? var.name_scheme.delimiter : null
+  properties = local.context_template == null ? var.name_scheme.properties : null
   template   = local.context_template
 
-  replace_chars_regex = var.naming_scheme.replace_chars_regex
+  replace_chars_regex = var.name_scheme.replace_chars_regex
 
   values = merge(
-    var.naming_scheme.extra_labels,
+    var.name_scheme.extra_values,
     { name = var.name }
   )
 }

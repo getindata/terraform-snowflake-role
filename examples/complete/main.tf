@@ -160,9 +160,9 @@ module "snowflake_role_2" {
 
   name              = "SAMPLE_TEST_2"
   context_templates = var.context_templates
-  naming_scheme = {
+  name_scheme = {
     context_template_name = "snowflake-project-role"
-    extra_labels = {
+    extra_values = {
       project = "PROJECT"
     }
   }
@@ -187,10 +187,10 @@ module "snowflake_role_3" {
   source = "../../"
 
   name = "SAMPLE-TEST-3"
-  naming_scheme = {
+  name_scheme = {
     properties          = ["name", "schema", "environment"]
     delimiter           = "_"
     replace_chars_regex = "-"
-    extra_labels        = { schema = "SCHEMA" }
+    extra_values        = { schema = "SCHEMA" }
   }
 }
