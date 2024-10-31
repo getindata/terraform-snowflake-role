@@ -98,6 +98,35 @@ When upgrading from `v1.x`, expect most of the resources to be recreated - if re
 
 For more information, refer to [variables.tf](variables.tf), list of inputs below and Snowflake provider documentation
 
+## Breaking changes in v3.x of the module
+
+Due to replacement of nulllabel (`context.tf`) with context provider, some **breaking changes** were introduced in `v3.0.0` version of this module.
+
+List od code and variable (API) changes:
+
+- Removed `context.tf` file (a single-file module with additonal variables), which implied a removal of all its variables (except `name`):
+  - `descriptor_formats`
+  - `label_value_case`
+  - `label_key_case`
+  - `id_length_limit`
+  - `regex_replace_chars`
+  - `label_order`
+  - `additional_tag_map`
+  - `tags`
+  - `labels_as_tags`
+  - `attributes`
+  - `delimiter`
+  - `stage`
+  - `environment`
+  - `tenant`
+  - `namespace`
+  - `enabled`
+  - `context`
+- Remove support `enabled` flag - that might cause some backward compatibility issues with terraform state (please take into account that proper `move` clauses were added to minimize the impact), but proceed with caution
+- Additional `context` provider configuration
+- New variables were added, to allow naming configuration via `context` provider:
+  - `context_templates`
+  - `name_schema`
 
 <!-- BEGIN_TF_DOCS -->
 
