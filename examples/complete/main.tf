@@ -158,13 +158,14 @@ module "snowflake_role_1" {
 module "snowflake_role_2" {
   source = "../../"
 
-  name              = "SAMPLE_TEST_2"
+  name              = "sample_test_2"
   context_templates = var.context_templates
   name_scheme = {
     context_template_name = "snowflake-project-role"
     extra_values = {
-      project = "PROJECT"
+      project = "project"
     }
+    uppercase = false
   }
 
   account_grants = [
@@ -186,7 +187,7 @@ module "snowflake_role_2" {
 module "snowflake_role_3" {
   source = "../../"
 
-  name = "SAMPLE-TEST-3"
+  name = "sample-test-3"
   name_scheme = {
     properties          = ["name", "schema", "environment"]
     delimiter           = "_"

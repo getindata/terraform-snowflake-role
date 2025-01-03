@@ -189,6 +189,7 @@ variable "name_scheme" {
     context_template_name = optional(string, "snowflake-role")
     replace_chars_regex   = optional(string, "[^a-zA-Z0-9_]")
     extra_values          = optional(map(string))
+    uppercase             = optional(bool, true)
   })
   default = {}
 }
