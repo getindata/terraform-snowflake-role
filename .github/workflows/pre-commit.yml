@@ -11,4 +11,4 @@ on:
 
 jobs:
   main:
-    uses: getindata/github-workflows/.github/workflows/tf-pre-commit.yml@v1
+    uses: getindata/github-workflows/.github/workflows/tf-pre-commit.yml@d8b73d58f1a065a6265adfc8cfe1a6cdd9187402
