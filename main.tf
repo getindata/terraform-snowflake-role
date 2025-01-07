@@ -12,7 +12,7 @@ data "context_label" "this" {
 }
 
 resource "snowflake_account_role" "this" {
-  name    = data.context_label.this.rendered
+  name    = var.name_scheme.uppercase ? upper(data.context_label.this.rendered) : data.context_label.this.rendered
   comment = var.comment
 }
 moved {
