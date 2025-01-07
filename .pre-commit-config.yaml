@@ -5,9 +5,6 @@ repos:
       - id: terraform-validate # It should be the first step as it runs terraform init required by tflint
       - id: terraform-fmt
       - id: tflint
-        args:
-          - --module
-          #- "--config=__GIT_ROOT__/.tflint.hcl"
 
   - repo: https://github.com/terraform-docs/terraform-docs
     rev: "v0.18.0" # Get the latest from: https://github.com/terraform-docs/terraform-docs/releases
