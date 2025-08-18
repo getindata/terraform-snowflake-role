@@ -180,16 +180,16 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [snowflake_account_role.this](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/account_role) | resource |
-| [snowflake_grant_account_role.granted_roles](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_account_role) | resource |
-| [snowflake_grant_account_role.granted_to_roles](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_account_role) | resource |
-| [snowflake_grant_account_role.granted_to_users](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_account_role) | resource |
-| [snowflake_grant_database_role.granted_db_roles](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_database_role) | resource |
-| [snowflake_grant_ownership.this](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_ownership) | resource |
-| [snowflake_grant_privileges_to_account_role.account_grants](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_privileges_to_account_role) | resource |
-| [snowflake_grant_privileges_to_account_role.account_object_grants](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_privileges_to_account_role) | resource |
-| [snowflake_grant_privileges_to_account_role.schema_grants](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_privileges_to_account_role) | resource |
-| [snowflake_grant_privileges_to_account_role.schema_objects_grants](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_privileges_to_account_role) | resource |
+| [snowflake_account_role.this](https://registry.terraform.io/providers/snowflakedb/snowflake/latest/docs/resources/account_role) | resource |
+| [snowflake_grant_account_role.granted_roles](https://registry.terraform.io/providers/snowflakedb/snowflake/latest/docs/resources/grant_account_role) | resource |
+| [snowflake_grant_account_role.granted_to_roles](https://registry.terraform.io/providers/snowflakedb/snowflake/latest/docs/resources/grant_account_role) | resource |
+| [snowflake_grant_account_role.granted_to_users](https://registry.terraform.io/providers/snowflakedb/snowflake/latest/docs/resources/grant_account_role) | resource |
+| [snowflake_grant_database_role.granted_db_roles](https://registry.terraform.io/providers/snowflakedb/snowflake/latest/docs/resources/grant_database_role) | resource |
+| [snowflake_grant_ownership.this](https://registry.terraform.io/providers/snowflakedb/snowflake/latest/docs/resources/grant_ownership) | resource |
+| [snowflake_grant_privileges_to_account_role.account_grants](https://registry.terraform.io/providers/snowflakedb/snowflake/latest/docs/resources/grant_privileges_to_account_role) | resource |
+| [snowflake_grant_privileges_to_account_role.account_object_grants](https://registry.terraform.io/providers/snowflakedb/snowflake/latest/docs/resources/grant_privileges_to_account_role) | resource |
+| [snowflake_grant_privileges_to_account_role.schema_grants](https://registry.terraform.io/providers/snowflakedb/snowflake/latest/docs/resources/grant_privileges_to_account_role) | resource |
+| [snowflake_grant_privileges_to_account_role.schema_objects_grants](https://registry.terraform.io/providers/snowflakedb/snowflake/latest/docs/resources/grant_privileges_to_account_role) | resource |
 | [context_label.this](https://registry.terraform.io/providers/cloudposse/context/latest/docs/data-sources/label) | data source |
 <!-- END_TF_DOCS -->
 
