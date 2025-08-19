@@ -3,7 +3,7 @@ provider "snowflake" {}
 provider "context" {
   properties = {
     "environment" = {}
-    "name"        = {}
+    "name"        = { required = true }
   }
 
   values = {
