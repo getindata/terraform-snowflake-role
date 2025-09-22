@@ -59,6 +59,13 @@ resource "snowflake_grant_database_role" "granted_db_roles" {
   parent_role_name   = snowflake_account_role.this.name
 }
 
+resource "snowflake_grant_application_role" "granted_app_roles" {
+  for_each = toset(var.granted_application_roles)
+
+  application_role_name    = each.value
+  parent_account_role_name = snowflake_account_role.this.name
+}
+
 
 resource "snowflake_grant_privileges_to_account_role" "account_grants" {
   for_each = local.account_grants

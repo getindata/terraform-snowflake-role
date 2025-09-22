@@ -25,6 +25,7 @@ module "snowflake_role" {
   name = "LOGS_DATABASE_READER"
 
   granted_to_users = ["JANE_SMITH", "JOHN_DOE"]
+  granted_application_roles = ["SNOWFLAKE.BUDGET_VIEWER", "SNOWFLAKE.COST_INSIGHTS_USER"]
 
  account_grants = [
     {
@@ -149,6 +150,7 @@ For more information about provider rename, refer to [Snowflake documentation](h
 | <a name="input_account_objects_grants"></a> [account\_objects\_grants](#input\_account\_objects\_grants) | Grants on account object level.<br/>  Account objects list: USER \| RESOURCE MONITOR \| WAREHOUSE \| COMPUTE POOL \| DATABASE \| INTEGRATION \| FAILOVER GROUP \| REPLICATION GROUP \| EXTERNAL VOLUME<br/>  Object type is used as a key in the map.<br/><br/>  Exmpale usage:<pre>account_object_grants = {<br/>    "WAREHOUSE" = [<br/>      {<br/>        all_privileges = true<br/>        with_grant_option = true<br/>        object_name = "TEST_USER"<br/>      }<br/>    ]<br/>    "DATABASE" = [<br/>      {<br/>        privileges = ["CREATE SCHEMA", "CREATE DATABASE ROLE"]<br/>        object_name = "TEST_DATABASE"<br/>      },<br/>      {<br/>        privileges = ["CREATE SCHEMA"]<br/>        object_name = "OTHER_DATABASE"<br/>      }<br/>    ]<br/>  }</pre>Note: You can find a list of all object types [here](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/grant_privileges_to_account_role#nested-schema-for-on_account_object) | <pre>map(list(object({<br/>    all_privileges    = optional(bool)<br/>    with_grant_option = optional(bool, false)<br/>    privileges        = optional(list(string), null)<br/>    object_name       = string<br/>  })))</pre> | `{}` | no |
 | <a name="input_comment"></a> [comment](#input\_comment) | Role description | `string` | `null` | no |
 | <a name="input_context_templates"></a> [context\_templates](#input\_context\_templates) | Map of context templates used for naming conventions - this variable supersedes `naming_scheme.properties` and `naming_scheme.delimiter` configuration | `map(string)` | `{}` | no |
+| <a name="input_granted_application_roles"></a> [granted\_application\_roles](#input\_granted\_application\_roles) | Application Roles granted to this role | `list(string)` | `[]` | no |
 | <a name="input_granted_database_roles"></a> [granted\_database\_roles](#input\_granted\_database\_roles) | Database Roles granted to this role | `list(string)` | `[]` | no |
 | <a name="input_granted_roles"></a> [granted\_roles](#input\_granted\_roles) | Roles granted to this role | `list(string)` | `[]` | no |
 | <a name="input_granted_to_roles"></a> [granted\_to\_roles](#input\_granted\_to\_roles) | Roles which this role is granted to | `list(string)` | `[]` | no |
@@ -192,6 +194,7 @@ No modules.
 | [snowflake_grant_account_role.granted_roles](https://registry.terraform.io/providers/snowflakedb/snowflake/latest/docs/resources/grant_account_role) | resource |
 | [snowflake_grant_account_role.granted_to_roles](https://registry.terraform.io/providers/snowflakedb/snowflake/latest/docs/resources/grant_account_role) | resource |
 | [snowflake_grant_account_role.granted_to_users](https://registry.terraform.io/providers/snowflakedb/snowflake/latest/docs/resources/grant_account_role) | resource |
+| [snowflake_grant_application_role.granted_app_roles](https://registry.terraform.io/providers/snowflakedb/snowflake/latest/docs/resources/grant_application_role) | resource |
 | [snowflake_grant_database_role.granted_db_roles](https://registry.terraform.io/providers/snowflakedb/snowflake/latest/docs/resources/grant_database_role) | resource |
 | [snowflake_grant_ownership.this](https://registry.terraform.io/providers/snowflakedb/snowflake/latest/docs/resources/grant_ownership) | resource |
 | [snowflake_grant_privileges_to_account_role.account_grants](https://registry.terraform.io/providers/snowflakedb/snowflake/latest/docs/resources/grant_privileges_to_account_role) | resource |

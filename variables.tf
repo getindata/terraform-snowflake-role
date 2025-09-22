@@ -27,6 +27,12 @@ variable "granted_database_roles" {
   default     = []
 }
 
+variable "granted_application_roles" {
+  description = "Application Roles granted to this role"
+  type        = list(string)
+  default     = []
+}
+
 variable "granted_to_roles" {
   description = "Roles which this role is granted to"
   type        = list(string)
