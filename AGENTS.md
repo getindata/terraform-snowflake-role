@@ -267,7 +267,7 @@ The module enforces several validation constraints in `variables.tf`:
 - Always use `getindata` modules if available instead of unknown modules or raw resources
 - Always save context / information to AGENTS.md (do not use CLAUDE.md for that)
 - Always use terraform best practices when creating code, planning and reviewing
-- Always check and fix lining of terraform code that was generated according to best practices and built-in `terraform fmt` command
+- Always check and fix linting of terraform code that was generated according to best practices and built-in `terraform fmt` command
 - **Context Provider Best Practices**:
   - Keep naming logic in context provider and templates, avoid hardcoded values in resources
   - Use single `extra_values` source to avoid configuration duplication
