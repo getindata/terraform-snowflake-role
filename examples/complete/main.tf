@@ -69,6 +69,10 @@ module "snowflake_role_1" {
 
   granted_roles          = [snowflake_account_role.role_2.name]
   granted_database_roles = ["${snowflake_database.this.name}.${snowflake_database_role.this.name}"]
+  granted_application_roles = [
+    "SNOWFLAKE.BUDGET_VIEWER",
+    "SNOWFLAKE.COST_INSIGHTS_USER",
+  ]
 
   account_grants = [{
     privileges = ["CREATE DATABASE"]
